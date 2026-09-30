@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Dados para Simulação de Financiamento</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<main>
+<h1>🏠 Dados para Simulação</h1>
+<p class="sub">Preencha os campos e envie o resultado direto para o WhatsApp.</p>
+<div id="form" novalidate>
+
+<section><h2>1. Dados pessoais</h2>
+<div class="f"><label for="cpf">CPF</label><input id="cpf" type="text" inputmode="numeric" maxlength="14" placeholder="000.000.000-00" autocomplete="off"></div>
+<div class="f"><label for="nasc">Nascimento</label><input id="nasc" type="date"></div>
+<div class="f"><label for="civil">Estado civil</label><select id="civil"><option value="">Selecione</option><option>Solteiro(a)</option><option>Casado(a)</option><option>União estável</option><option>Divorciado(a)</option><option>Separado(a)</option><option>Viúvo(a)</option></select></div>
+<div class="f"><label for="cidade">Cidade onde mora</label><input id="cidade" type="text" placeholder="Ex.: São José dos Campos - SP"></div>
+</section>
+
+<section><h2>2. Renda</h2>
+<div class="f"><label for="renda">Renda bruta (R$)</label><input id="renda" class="m" type="text" inputmode="numeric" placeholder="R$ 0,00"></div>
+<div class="f"><label for="prof">Profissão/atividade</label><input id="prof" type="text"></div>
+<div class="f"><span class="lb">Vai compor renda?</span><div class="yn" data-n="compor"></div></div>
+<div class="f hide" id="boxOutra"><label for="outra">Renda da outra pessoa (R$)</label><input id="outra" class="m" type="text" inputmode="numeric" placeholder="R$ 0,00"></div>
+</section>
+
+<section><h2>3. Imóvel</h2>
+<div class="f"><label for="valor">Valor do imóvel (R$)</label><input id="valor" class="m" type="text" inputmode="numeric" placeholder="R$ 0,00"></div>
+<div class="f"><span class="lb">Novo ou usado</span><div class="yn" data-n="condicao" data-o="Novo,Usado"></div></div>
+<div class="f"><label for="cidImovel">Cidade do imóvel</label><input id="cidImovel" type="text"></div>
+<div class="f"><label for="entrada">Valor da entrada (R$)</label><input id="entrada" class="m" type="text" inputmode="numeric" placeholder="R$ 0,00"></div>
+</section>
+
+<section><h2>4. FGTS</h2>
+<div class="f"><span class="lb">Possui FGTS?</span><div class="yn" data-n="fgts"></div></div>
+<div class="f hide" id="boxSaldo"><label for="saldo">Saldo aproximado (R$)</label><input id="saldo" class="m" type="text" inputmode="numeric" placeholder="R$ 0,00"></div>
+<div class="f"><span class="lb">3 anos ou mais de carteira assinada, somando os períodos?</span><div class="yn" data-n="tres"></div></div>
+<div class="f"><span class="lb">Já usou FGTS para comprar imóvel?</span><div class="yn" data-n="usou"></div></div>
+</section>
+
+<section><h2>5. Situação atual</h2>
+<div class="f"><span class="lb">Possui imóvel residencial em seu nome?</span><div class="yn" data-n="possui"></div></div>
+<div class="f"><span class="lb">Já teve financiamento habitacional?</span><div class="yn" data-n="teve"></div></div>
+<div class="f"><span class="lb">Já recebeu subsídio habitacional?</span><div class="yn" data-n="subs"></div></div>
+</section>
+
+<button type="button" id="enviar">Enviar resultado pelo WhatsApp</button>
+<p class="er" id="geral" style="text-align:center"></p>
+<p class="note">Ao enviar, o WhatsApp abrirá com a mensagem pronta. Seus dados só são compartilhados quando você toca em enviar.</p>
+</div>
+</main>
+<script src="script.js"></script>
+</body>
+</html>
