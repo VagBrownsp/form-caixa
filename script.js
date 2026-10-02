@@ -116,8 +116,13 @@ $("cpf").addEventListener("input", e => {
 });
 
 $("nasc").addEventListener("input", e => {
-  e.target.value = e.target.value.replace(/\D/g, "").slice(0, 8)
-    .replace(/(\d{2})(\d)/, "$1/$2").replace(/(\d{2})(\d)/, "$1/$2");                    // 25121990 -> 25/12/1990
+  const apagando = (e.inputType || "").startsWith("delete");   // não recoloca a barra ao apagar
+  const d = e.target.value.replace(/\D/g, "").slice(0, 8);
+  let r = d;
+  if (d.length > 4)      r = d.slice(0, 2) + "/" + d.slice(2, 4) + "/" + d.slice(4);
+  else if (d.length > 2) r = d.slice(0, 2) + "/" + d.slice(2);
+  if ((d.length === 2 || d.length === 4) && !apagando) r += "/";                       // 25 -> 25/ · 2512 -> 25/12/
+  e.target.value = r;
   e.target.classList.remove("bad"); $("nascErr").textContent = "";
 });
 
