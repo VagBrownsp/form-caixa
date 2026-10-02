@@ -27,7 +27,6 @@ const $ = id => document.getElementById(id);
 const val = nome => { const r = document.querySelector(`input[name="${nome}"]:checked`); return r ? r.value : ""; };
 const num = s => parseInt((s || "").replace(/\D/g, "") || "0", 10) / 100;           // "R$ 1.234,56" -> 1234.56
 const brl = n => n.toLocaleString("pt-BR", { style: "currency", currency: "BRL" });
-const fmtData = s => s ? s.split("-").reverse().join("/") : "";                      // 2000-12-31 -> 31/12/2000
 const bonito = n => n.toLowerCase()                                                  // "SÃO JOSÉ" -> "São José"
   .replace(/(^|\s)(\S)/g, (m, a, b) => a + b.toUpperCase())
   .replace(/\s(De|Da|Do|Das|Dos|E)(?=\s)/g, x => x.toLowerCase());
@@ -116,6 +115,12 @@ $("cpf").addEventListener("input", e => {
   e.target.classList.remove("bad"); $("cpfErr").textContent = "";
 });
 
+$("nasc").addEventListener("input", e => {
+  e.target.value = e.target.value.replace(/\D/g, "").slice(0, 8)
+    .replace(/(\d{2})(\d)/, "$1/$2").replace(/(\d{2})(\d)/, "$1/$2");                    // 25121990 -> 25/12/1990
+  e.target.classList.remove("bad"); $("nascErr").textContent = "";
+});
+
 document.querySelectorAll(".m").forEach(el => el.addEventListener("input", e => {
   const d = e.target.value.replace(/\D/g, "");
   e.target.value = d ? brl(parseInt(d, 10) / 100) : "";
@@ -142,7 +147,22 @@ function checarCpf() {
 }
 $("cpf").addEventListener("blur", checarCpf);
 
-// 5.2 Entrada mínima
+// 5.2 Data de nascimento (dd/mm/aaaa, data real, entre 1900 e hoje)
+function dataOk(s) {
+  const m = s.match(/^(\d{2})\/(\d{2})\/(\d{4})$/);
+  if (!m) return false;
+  const d = +m[1], mes = +m[2], a = +m[3], dt = new Date(a, mes - 1, d);
+  return dt.getFullYear() === a && dt.getMonth() === mes - 1 && dt.getDate() === d && a >= 1900 && dt <= new Date();
+}
+function checarNasc() {
+  const invalido = $("nasc").value && !dataOk($("nasc").value);
+  $("nasc").classList.toggle("bad", !!invalido);
+  $("nascErr").textContent = invalido ? "Data inválida. Use o formato dd/mm/aaaa." : "";
+  return !invalido;
+}
+$("nasc").addEventListener("blur", checarNasc);
+
+// 5.3 Entrada mínima
 let entradaEditada = false; // enquanto falso, a entrada acompanha o mínimo sugerido
 const entradaMinima = () => Math.round(num($("valor").value) * ENTRADA_MIN * 100) / 100;
 
@@ -170,7 +190,7 @@ function montarMensagem() {
 
 *1. DADOS PESSOAIS*
 CPF: ${$("cpf").value}
-Nascimento: ${fmtData($("nasc").value)}
+Nascimento: ${$("nasc").value}
 Naturalidade: ${localVal("nat")}
 Estado civil: ${$("civil").value}
 Cidade onde mora: ${localVal("mora")}
@@ -211,6 +231,7 @@ $("enviar").onclick = () => {
    ["imv", "Informe estado e cidade do imóvel."]]
     .forEach(([id, msg]) => { if (!localVal(id)) falha($(id), msg); });
 
+  if ($("nasc").value && !checarNasc()) falha($("nasc"), "Data de nascimento inválida.");
   if ($("prof").value === "Outros" && !$("profOutra").value.trim()) falha($("profOutra"), "Digite sua profissão.");
   if ($("cpf").value && !checarCpf()) falha($("cpf"), "CPF inválido.");
   if (val("compor") === "Sim" && !$("outra").value) falha($("outra"), "Informe a renda da outra pessoa.");
